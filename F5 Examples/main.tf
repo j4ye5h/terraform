@@ -9,8 +9,8 @@ terraform {
 
 provider "bigip" {
     address = "10.10.10.10"
-    username = "admin"
-    password = "P4ssw0rd@123"
+    username = var.usernamevar
+    password = var.passwordvar
 }
 
 resource "bigip_command" "set-hostname" {
