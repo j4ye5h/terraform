@@ -1,34 +1,34 @@
 terraform {
   required_providers {
     bigip = {
-      source = "F5Networks/bigip"
+      source  = "F5Networks/bigip"
       version = "1.6.0"
     }
   }
 }
 
 provider "bigip" {
-    address = "10.10.10.10"
-    username = var.usernamevar
-    password = var.passwordvar
+  address  = "10.10.10.10"
+  username = var.usernamevar
+  password = var.passwordvar
 }
 
 resource "bigip_command" "set-hostname" {
-    commands        = ["modify sys global-settings hostname f5london1.lab.local"]
-  
+  commands = ["modify sys global-settings hostname f5london1.lab.local"]
+
 }
 
 resource "bigip_sys_ntp" "ntp1" {
-    description     = "/Common/NTP1"
-    servers         = ["ntp.pool.org"]
-    timezone        = "Europe/London"
-  
+  description = "/Common/NTP1"
+  servers     = ["ntp.pool.org"]
+  timezone    = "Europe/London"
+
 }
 
 resource "bigip_sys_dns" "dns1" {
-    description     = "/Common/DNS1"
-    name_servers    = ["8.8.8.8"]
-  
+  description  = "/Common/DNS1"
+  name_servers = ["8.8.8.8"]
+
 }
 
 resource "bigip_net_vlan" "internal" {
@@ -54,7 +54,7 @@ resource "bigip_net_selfip" "internal_selfip" {
   ip            = "172.16.0.2/24"
   vlan          = "/Common/internal"
   traffic_group = "traffic-group-1"
-  depends_on = [bigip_net_vlan.internal]
+  depends_on    = [bigip_net_vlan.internal]
 }
 
 resource "bigip_net_selfip" "external_selfip" {
@@ -62,7 +62,7 @@ resource "bigip_net_selfip" "external_selfip" {
   ip            = "10.0.0.2/24"
   vlan          = "/Common/internal"
   traffic_group = "traffic-group-1"
-  depends_on = [bigip_net_vlan.external]
+  depends_on    = [bigip_net_vlan.external]
 }
 
 resource "bigip_net_selfip" "internal_floatIP" {
@@ -70,7 +70,7 @@ resource "bigip_net_selfip" "internal_floatIP" {
   ip            = "172.16.0.1/24"
   vlan          = "/Common/internal"
   traffic_group = "traffic-group-1"
-  depends_on = [bigip_net_selfip.internal_selfip]
+  depends_on    = [bigip_net_selfip.internal_selfip]
 }
 
 resource "bigip_net_selfip" "external_floatIP" {
@@ -78,5 +78,5 @@ resource "bigip_net_selfip" "external_floatIP" {
   ip            = "10.0.0.1/24"
   vlan          = "/Common/internal"
   traffic_group = "traffic-group-1"
-  depends_on = [bigip_net_selfip.external_selfip]
+  depends_on    = [bigip_net_selfip.external_selfip]
 }
